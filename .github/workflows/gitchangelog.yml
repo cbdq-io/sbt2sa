@@ -35,7 +35,7 @@ jobs:
       - name: Git Add, Commit & Push
         run: |
           git status --porcelain
-          git status --porcelain CHANGELOG.md | grep -q '^.[MADRC]' || exit 0
+          git status --porcelain CHANGELOG.md | grep -q '^.[\?MADRC]' || exit 0
           git add CHANGELOG.md
           git commit -m 'chg: dev: Update change log.'
           git push
