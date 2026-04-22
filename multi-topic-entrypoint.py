@@ -49,7 +49,7 @@ class Archivist:
             for (topic_name, subscription_name) in self.topics_and_subscriptions():
                 os.environ['TOPIC_NAME'] = topic_name
                 os.environ['SUBSCRIPTION_NAME'] = subscription_name
-                message_count = SBT2Blob.main_wrapper('sbt2blob')
+                message_count = SBT2Blob.main_wrapper()
 
                 if message_count:
                     self.prom_files_couner.inc()

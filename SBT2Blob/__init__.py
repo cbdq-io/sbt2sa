@@ -18,7 +18,7 @@ MAX_MESSAGES_IN_BATCH = int(os.getenv('MAX_MESSAGES_IN_BATCH', '500'))
 MAX_RUNTIME_SECONDS = int(os.getenv('MAX_RUNTIME_SECONDS', '0'))
 WAIT_TIME_SECONDS = int(os.getenv('WAIT_TIME_SECONDS', '5'))
 logging.basicConfig()
-logger = logging.getLogger()
+logger = logging.getLogger('sbt2sa')
 _message_count = 0
 
 
@@ -312,7 +312,7 @@ def main() -> None:
     logger.info(f'A total of {_message_count:,} messages were loaded to blob storage for {topic_name}.')
 
 
-def main_wrapper(logger_name: str) -> int:
+def main_wrapper() -> int:
     """
     Call main from outside of the Azure Function App tooling.
 
@@ -325,7 +325,6 @@ def main_wrapper(logger_name: str) -> int:
     """
     global _message_count
 
-    logger.name = logger_name
     _message_count = 0
     main()
     return _message_count
