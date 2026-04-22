@@ -9,6 +9,8 @@
 
 ### Fix
 
+* Correct excessive logging. [Ben Dalling]
+
 * Correct behaviour if change log is not present. [Ben Dalling]
 
 ### Build
