@@ -1,0 +1,85 @@
+---
+services:
+  azurite:
+    command: azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck
+    container_name: azurite
+    healthcheck:
+      test: nc -nz 127.0.0.1 10000
+      interval: 1s
+      retries: 5
+      start_period: 10s
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - 10000:10000
+
+  emulators:
+    build: emulators
+    command:
+      - "-c"
+      - "Endpoint=sb://sbemulatorns;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
+      - "-f"
+      - "/usr/local/etc/Config.json"
+    container_name: emulators
+    depends_on:
+      azurite:
+        condition: service_healthy
+      sbemulatorns:
+        condition: service_started
+    volumes:
+      - "./sbus-landing-config.json:/usr/local/etc/Config.json"
+
+  sbemulatorns:
+    container_name: "sbemulatorns"
+    depends_on:
+      sqledge:
+        condition: service_healthy
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Secret123
+      SQL_SERVER: sqledge
+      SQL_WAIT_INTERVAL: "0"
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    ports:
+      - "5672:5672"
+      - "8080:8080"
+    volumes:
+      - "./sbus-landing-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json"
+    platform: linux/x86_64
+
+  sqledge:
+    container_name: "sqledge"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Secret123"
+    healthcheck:
+      interval: 1m
+      retries: 3
+      start_interval: 1s
+      start_period: 15s
+      test: /bin/sh -c "/opt/mssql-tools/bin/sqlcmd -U sa -P $$MSSQL_SA_PASSWORD -Q
+        'SELECT 1'"
+      timeout: 5s
+    image: "mcr.microsoft.com/azure-sql-edge:latest"
+    platform: linux/x86_64
+
+  sut:
+    build: ../..
+    depends_on:
+      emulators:
+        condition: service_completed_successfully
+    entrypoint: /usr/local/bin/multi-topic-entrypoint.py
+    environment:
+      CHECK_FOR_DL_MESSAGES: 1
+      CONTAINER_NAME: mycontainer
+      LOG_LEVEL: DEBUG
+      MAX_RUNTIME_SECONDS: 15
+      PROMETHEUS_METRIC_NAME_PREFIX: widget_
+      SERVICE_BUS_CONNECTION_STRING: "${SERVICE_BUS_CONNECTION_STRING}"
+      STORAGE_ACCOUNT_CONNECTION_STRING: "${STORAGE_ACCOUNT_CONNECTION_STRING}"
+      TOPICS_DIR: topics2
+      TOPICS_AND_SUBSCRIPTIONS: "mytopic:test2"
+    container_name: sut
+    image: sbt2blob:latest
+    platform: linux/x86_64
+    ports:
+      - "8000:8000"
