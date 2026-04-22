@@ -1,0 +1,9 @@
+flake8-docstrings
+flake8-quotes
+isort
+lorem
+msrestazure
+pytest-cov
+radon
+testinfra-bdd
+yamllint
