@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 1.0.0 (2026-05-14)
+
+### Fix
+
+* CVE-2026-44432 no longer on the image. [Ben Dalling]
+
+
 ## 0.1.0 (2026-04-22)
 
 ### Features
