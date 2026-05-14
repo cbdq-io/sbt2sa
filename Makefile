@@ -1,7 +1,7 @@
 .EXPORT_ALL_VARIABLES:
 
 COMPOSE_FILE = tests/resources/docker-compose.yaml
-TAG = 0.1.0
+TAG = 1.0.0
 
 all: lint clean build test
 
