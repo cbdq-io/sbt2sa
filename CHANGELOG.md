@@ -1,6 +1,23 @@
 # Changelog
 
 
+## 1.0.1 (2026-06-03)
+
+### Build
+
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 2.17.0 to 3.0.1.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 3.0.1
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+
 ## 1.0.0 (2026-05-14)
 
 ### Fix
