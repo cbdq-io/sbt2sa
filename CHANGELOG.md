@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Fix
+
+* Update the version of the Git Flow workflow. [Ben Dalling]
+
 ### Build
 
 * Bump actions/checkout from 6 to 7. [dependabot[bot]]
