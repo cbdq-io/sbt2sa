@@ -1,6 +1,25 @@
 # Changelog
 
 
+## Unreleased
+
+### Build
+
+* Bump actions/setup-python from 6 to 7. [dependabot[bot]]
+
+  Bumps [actions/setup-python](https://github.com/actions/setup-python) from 6 to 7.
+  - [Release notes](https://github.com/actions/setup-python/releases)
+  - [Commits](https://github.com/actions/setup-python/compare/v6...v7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/setup-python
+    dependency-version: '7'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+
 ## 1.0.3 (2026-07-21)
 
 ### Build
