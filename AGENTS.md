@@ -60,7 +60,7 @@ The commands to create the new release are:
 git config user.email '136103132+cbdqbot@users.noreply.github.com'
 git config user.name 'CBDQ Bot Account'
 git checkout -b release/X.Y.Z
-sed -i.bak 's/^TAG = 1.0.3/TAG = 1.0.4/' Makefile
+sed -i.bak 's/^TAG = A.B.C/TAG = X.Y.Z/' Makefile
 git commit -m COMMIT_MESSAGE
 git push --set-upstream origin release/X.Y.Z
 ```
