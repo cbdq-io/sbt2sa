@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Fix
+
+* Hadolint prefers UID over user name in Dockerfile. [Ben Dalling]
+
 ### Build
 
 * Bump actions/setup-python from 6 to 7. [dependabot[bot]]
