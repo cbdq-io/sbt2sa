@@ -33,6 +33,5 @@ test:
 	PYTHONPATH=. pytest
 
 prereqs:
-	docker run --entrypoint /bin/sh mcr.microsoft.com/azure-functions/python:4-python3.14-appservice -c "pip freeze" > constraints.txt
-	pip install -Uc constraints.txt -r requirements.txt -r requirements-dev.txt
+	pip install -U -r requirements.txt -r requirements-dev.txt
 	pip check
