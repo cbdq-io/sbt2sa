@@ -5,6 +5,10 @@
 
 ### Fix
 
+* Add basic instructions for creating a release. [Ben Dalling]
+
+* Trivy config. [Ben Dalling]
+
 * Hadolint prefers UID over user name in Dockerfile. [Ben Dalling]
 
 ### Build
