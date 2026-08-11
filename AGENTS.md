@@ -61,6 +61,7 @@ git config user.email '136103132+cbdqbot@users.noreply.github.com'
 git config user.name 'CBDQ Bot Account'
 git checkout -b release/X.Y.Z
 sed -i.bak 's/^TAG = A.B.C/TAG = X.Y.Z/' Makefile
+git add Makefile
 git commit -m COMMIT_MESSAGE
 git push --set-upstream origin release/X.Y.Z
 ```
