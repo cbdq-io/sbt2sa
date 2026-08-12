@@ -24,7 +24,7 @@ COPY --chown=appuser:appuser --chmod=755 --from=router /home/appuser/nukedlq.py 
 
 ENV PROMETHEUS_PORT=8000
 ENV PYTHONPATH="/home/appuser"
-USER appuser
+USER 1000
 WORKDIR /home/appuser
 RUN pip install --no-cache-dir --requirement requirements.txt --user
 

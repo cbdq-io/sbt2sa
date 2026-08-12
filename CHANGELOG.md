@@ -1,7 +1,15 @@
 # Changelog
 
 
-## Unreleased
+## 1.0.4 (2026-08-12)
+
+### Fix
+
+* Add basic instructions for creating a release. [Ben Dalling]
+
+* Trivy config. [Ben Dalling]
+
+* Hadolint prefers UID over user name in Dockerfile. [Ben Dalling]
 
 ### Build
 
