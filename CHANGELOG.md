@@ -1,6 +1,15 @@
 # Changelog
 
 
+## Unreleased
+
+### Fix
+
+* Resolve CVE-2026-53615. [Ben Dalling]
+
+* Skip GitFlow and changelog workflows for dependabot PRs. [Ben Dalling]
+
+
 ## 1.0.4 (2026-08-12)
 
 ### Fix
