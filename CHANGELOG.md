@@ -5,6 +5,44 @@
 
 ### Fix
 
+* Resolve CVE-2026-53615. [Ben Dalling]
+
+* Skip GitFlow and changelog workflows for dependabot PRs. [Ben Dalling]
+
+### Build
+
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 4.0.0 to 4.1.0.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 4.1.0
+    dependency-type: direct:production
+    update-type: version-update:semver-minor
+  ...
+
+* Bump cbdq-io/gitflow-action from 1.0.6 to 1.0.7. [dependabot[bot]]
+
+  Bumps [cbdq-io/gitflow-action](https://github.com/cbdq-io/gitflow-action) from 1.0.6 to 1.0.7.
+  - [Release notes](https://github.com/cbdq-io/gitflow-action/releases)
+  - [Changelog](https://github.com/cbdq-io/gitflow-action/blob/develop/CHANGELOG.md)
+  - [Commits](https://github.com/cbdq-io/gitflow-action/compare/1.0.6...1.0.7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: cbdq-io/gitflow-action
+    dependency-version: 1.0.7
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+
+## 1.0.4 (2026-08-12)
+
+### Fix
+
 * Add basic instructions for creating a release. [Ben Dalling]
 
 * Trivy config. [Ben Dalling]

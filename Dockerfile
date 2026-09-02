@@ -8,6 +8,8 @@ LABEL org.opencontainers.image.description "Extract data from Azure Service Bus 
 RUN apt-get update \
   && apt-get install --no-install-recommends --yes \
     curl \
+  && apt-get upgrade --yes \
+    bsdutils \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && addgroup --gid 1000 appuser \
