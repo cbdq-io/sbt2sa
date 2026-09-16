@@ -209,10 +209,10 @@ class Loader:
         uri = uri.uri(offset=offset, timestamp=timestamp)
         self.path = uri
 
-        with smart_open.open(uri, 'w', transport_params=self.transport_params) as stream:
+        with smart_open.open(uri, 'wb', transport_params=self.transport_params) as stream:
             for message in messages:
-                body = str(message)
-                stream.write(body + '\n')
+                body = b''.join(message.body)
+                stream.write(body + b'\n')
 
 
 def get_environment_variable(key_name: str, default=None, required=False) -> str:

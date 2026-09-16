@@ -19,6 +19,6 @@ Scenario: Exit Criteria
     And the TestInfra command is "docker compose logs sut && curl localhost:8000/metrics"
     Then the blob count should be 2
     And the earliest file should contain 500 messages
-    And the latest file should contain 13 messages
+    And the latest file should contain 14 messages
     And the TestInfra command stdout contains "There are dead-letter messages on mytopic/test2"
     And the TestInfra command stdout contains "widget_message_count_total "
