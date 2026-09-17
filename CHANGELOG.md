@@ -5,6 +5,18 @@
 
 ### Build
 
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 4.1.0 to 4.1.1.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 4.1.1
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
 * Bump cbdq-io/gitflow-action from 1.0.7 to 1.0.8. [dependabot[bot]]
 
   Bumps [cbdq-io/gitflow-action](https://github.com/cbdq-io/gitflow-action) from 1.0.7 to 1.0.8.
