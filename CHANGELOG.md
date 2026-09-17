@@ -5,6 +5,13 @@
 
 ### Fix
 
+* Ensure the loader can handle binary data. [Ben Dalling]
+
+
+## 1.0.5 (2026-09-02)
+
+### Fix
+
 * Resolve CVE-2026-53615. [Ben Dalling]
 
 * Skip GitFlow and changelog workflows for dependabot PRs. [Ben Dalling]

@@ -120,6 +120,8 @@ def _(SERVICE_BUS_EMULATOR_CONNECTION_STRING: str):
         logger.debug(f'Sent message {idx}/{MESSAGE_COUNT}.')
         time.sleep(0.05)
 
+    issue37 = ServiceBusMessage(body=b'Issue 37 test' + b'\xbf')
+    sender.send_messages(issue37)
     sender.close()
     client.close()
 
