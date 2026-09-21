@@ -1,7 +1,14 @@
 # Changelog
 
 
-## Unreleased
+## 1.0.6 (2026-09-17)
+
+### Fix
+
+* Ensure the loader can handle binary data. [Ben Dalling]
+
+
+## 1.0.5 (2026-09-02)
 
 ### Build
 
