@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Fix
+
+* Release/1.0.7. [James Loughlin]
+
 ### Build
 
 * Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
