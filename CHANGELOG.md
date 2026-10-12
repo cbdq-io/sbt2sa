@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Fix
+
+* Serialized receiver operations to prevent concurrent AMQP access during lock. [Ben Dalling]
+
 ### Build
 
 * Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
