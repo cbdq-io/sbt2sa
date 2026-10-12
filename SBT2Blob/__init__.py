@@ -4,6 +4,7 @@ import datetime
 import logging
 import os
 import sys
+import threading
 import time
 
 import azure.storage
@@ -71,6 +72,34 @@ class LoadURI:
         return uri
 
 
+class SerializedReceiver:
+    """Serialize foreground and background operations on one SDK receiver."""
+
+    def __init__(self, receiver):
+        self._receiver = receiver
+        self._lock = threading.Lock()
+
+    def receive_messages(self, **kwargs):
+        """Receive without racing background lock renewal."""
+        with self._lock:
+            return self._receiver.receive_messages(**kwargs)
+
+    def complete_message(self, message):
+        """Settle a message without racing background lock renewal."""
+        with self._lock:
+            return self._receiver.complete_message(message)
+
+    def renew_message_lock(self, message):
+        """Renew a lock without concurrent access to the AMQP transport."""
+        with self._lock:
+            return self._receiver.renew_message_lock(message)
+
+    def close(self):
+        """Close the receiver after any active operation finishes."""
+        with self._lock:
+            self._receiver.close()
+
+
 class Extractor:
     """Extract data from Service Bus."""
 
@@ -80,11 +109,13 @@ class Extractor:
         self.client = ServiceBusClient.from_connection_string(connection_string)
         self.topic_name = topic_name
         self.subscription_name = subscription_name
-        self.receiver = self.client.get_subscription_receiver(
+        # The synchronous SDK receiver is not thread-safe. AutoLockRenewer
+        # shares it with the receive/settlement loop and with other renewals.
+        self.receiver = SerializedReceiver(self.client.get_subscription_receiver(
             topic_name,
             subscription_name,
             prefetch_count=MAX_MESSAGES_IN_BATCH * 2
-        )
+        ))
         self.renewer = AutoLockRenewer()
         self.empty_receive_count = 0
         self.check_for_dead_letter_messages = check_for_dead_letter_messages
@@ -98,17 +129,17 @@ class Extractor:
         """Close the Service Bus Resources."""
         try:
             self.renewer.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the renewer: {ex}')
 
         try:
             self.receiver.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the receiver: {ex}')
 
         try:
             self.client.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the client: {ex}')
 
     def dlq_has_messages(self) -> bool:
