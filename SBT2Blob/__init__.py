@@ -289,23 +289,34 @@ def main() -> None:
         topic_name,
         path_format
     )
+
     _message_count = 0
     start_time = time.monotonic()
+    consecutive_errors = 0
 
-    while not extractor.finished:
-        if is_max_runtime_exceeded(start_time):
-            logger.warning(
-                f'Max runtime of {MAX_RUNTIME_SECONDS} seconds exceeded for {topic_name}. '
-                f'Breaking early.'
-            )
-            break
+    try:
+        while not extractor.finished:
+            if is_max_runtime_exceeded(start_time):
+                logger.warning(
+                    f'Max runtime of {MAX_RUNTIME_SECONDS} seconds exceeded for {topic_name}. '
+                    f'Breaking early.'
+                )
+                break
 
-        messages = extractor.get_messages()
-        loader.load(messages)
-        extractor.accept_messages(messages)
-        _message_count += len(messages)
+            try:
+                messages = extractor.get_messages()
+                loader.load(messages)
+                extractor.accept_messages(messages)
+                _message_count += len(messages)
+                consecutive_errors = 0
+            except ServiceBusError as ex:
+                consecutive_errors += 1
+                logger.warning(f'{topic_name} - {ex}')
+                if consecutive_errors >= 3:
+                    raise
+    finally:
+        extractor.close()
 
-    extractor.close()
     logger.info(f'A total of {_message_count:,} messages were loaded to blob storage for {topic_name}.')
 
 
