@@ -98,17 +98,17 @@ class Extractor:
         """Close the Service Bus Resources."""
         try:
             self.renewer.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the renewer: {ex}')
 
         try:
             self.receiver.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the receiver: {ex}')
 
         try:
             self.client.close()
-        except (AttributeError, ServiceBusClient) as ex:
+        except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the client: {ex}')
 
     def dlq_has_messages(self) -> bool:
@@ -293,20 +293,17 @@ def main() -> None:
     start_time = time.monotonic()
 
     while not extractor.finished:
-        try:
-            if is_max_runtime_exceeded(start_time):
-                logger.warning(
-                    f'Max runtime of {MAX_RUNTIME_SECONDS} seconds exceeded for {topic_name}. '
-                    f'Breaking early.'
-                )
-                break
+        if is_max_runtime_exceeded(start_time):
+            logger.warning(
+                f'Max runtime of {MAX_RUNTIME_SECONDS} seconds exceeded for {topic_name}. '
+                f'Breaking early.'
+            )
+            break
 
-            messages = extractor.get_messages()
-            loader.load(messages)
-            extractor.accept_messages(messages)
-            _message_count += len(messages)
-        except ServiceBusError as ex:
-            logger.warning(f'{topic_name} - {ex}')
+        messages = extractor.get_messages()
+        loader.load(messages)
+        extractor.accept_messages(messages)
+        _message_count += len(messages)
 
     extractor.close()
     logger.info(f'A total of {_message_count:,} messages were loaded to blob storage for {topic_name}.')
