@@ -1,6 +1,13 @@
 # Changelog
 
 
+## Unreleased
+
+### Fix
+
+* Handle message lock errors better. [Ben Dalling]
+
+
 ## 1.0.9 (2026-10-14)
 
 ### Fix
