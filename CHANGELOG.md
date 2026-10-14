@@ -1,6 +1,15 @@
 # Changelog
 
 
+## Unreleased
+
+### Fix
+
+* Correct exception handling. [Ben Dalling]
+
+* Remove changes introduced in 1.0.8. [Ben Dalling]
+
+
 ## 1.0.8 (2026-10-14)
 
 ### Fix
