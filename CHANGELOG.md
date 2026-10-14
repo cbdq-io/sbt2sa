@@ -5,6 +5,8 @@
 
 ### Fix
 
+* Replace BAD release 1.0.8. [Ben Dalling]
+
 * Correct exception handling. [Ben Dalling]
 
 * Remove changes introduced in 1.0.8. [Ben Dalling]
