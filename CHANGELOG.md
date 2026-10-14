@@ -1,9 +1,11 @@
 # Changelog
 
 
-## Unreleased
+## 1.0.9 (2026-10-14)
 
 ### Fix
+
+* Replace BAD release 1.0.8. [Ben Dalling]
 
 * Correct exception handling. [Ben Dalling]
 
