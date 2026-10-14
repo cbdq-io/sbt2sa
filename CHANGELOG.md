@@ -5,6 +5,39 @@
 
 ### Fix
 
+* Serialized receiver operations to prevent concurrent AMQP access during lock. [Ben Dalling]
+
+### Build
+
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 4.1.2 to 4.1.3.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 4.1.3
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 4.1.1 to 4.1.2.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 4.1.2
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+
+## 1.0.7 (2026-09-23)
+
+### Fix
+
 * Release/1.0.7. [James Loughlin]
 
 ### Build
