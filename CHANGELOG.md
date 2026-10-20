@@ -5,6 +5,8 @@
 
 ### Fix
 
+* Use async Service Bus client to resolve message processing failures. [Ben Dalling]
+
 * Handle message lock errors better. [Ben Dalling]
 
 ### Build
