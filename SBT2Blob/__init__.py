@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Extract data from a Service Bus topic and loading to blob storage."""
+import asyncio
 import datetime
 import logging
 import os
@@ -9,9 +10,9 @@ import time
 import azure.storage
 import azure.storage.blob
 import smart_open
-from azure.servicebus import (AutoLockRenewer, ServiceBusClient,
-                              ServiceBusMessage, ServiceBusSubQueue)
-from azure.servicebus.exceptions import ServiceBusError
+from azure.servicebus import ServiceBusMessage, ServiceBusSubQueue
+from azure.servicebus.aio import AutoLockRenewer, ServiceBusClient
+from azure.servicebus.exceptions import MessageLockLostError, ServiceBusError
 
 MAX_EMPTY_RECEIVES = int(os.getenv('MAX_EMPTY_RECEIVES', '3'))
 MAX_MESSAGES_IN_BATCH = int(os.getenv('MAX_MESSAGES_IN_BATCH', '500'))
@@ -89,29 +90,43 @@ class Extractor:
         self.empty_receive_count = 0
         self.check_for_dead_letter_messages = check_for_dead_letter_messages
 
-    def accept_messages(self, messages: list[ServiceBusMessage]) -> None:
+    async def accept_messages(self, messages: list[ServiceBusMessage]) -> None:
         """Accept the messages in the current buffer."""
-        for message in messages:
-            self.receiver.complete_message(message)
+        if not messages:
+            return
 
-    def close(self) -> None:
+        results = await asyncio.gather(
+            *(self.receiver.complete_message(message) for message in messages),
+            return_exceptions=True
+        )
+
+        errors = [result for result in results if isinstance(result, BaseException)]
+        for message, result in zip(messages, results):
+            if isinstance(result, MessageLockLostError):
+                logger.warning(f'{self.topic_name} - Message {message.message_id} lock lost: {result}')
+
+        errors = [error for error in errors if not isinstance(error, MessageLockLostError)]
+        if errors:
+            raise errors[0]
+
+    async def close(self) -> None:
         """Close the Service Bus Resources."""
         try:
-            self.renewer.close()
+            await self.renewer.close()
         except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the renewer: {ex}')
 
         try:
-            self.receiver.close()
+            await self.receiver.close()
         except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the receiver: {ex}')
 
         try:
-            self.client.close()
+            await self.client.close()
         except (AttributeError, ServiceBusError) as ex:
             logger.warning(f'An error occurred while closing the client: {ex}')
 
-    def dlq_has_messages(self) -> bool:
+    async def dlq_has_messages(self) -> bool:
         """
         Check if there are dead-letter messages on the subscription.
 
@@ -125,12 +140,12 @@ class Extractor:
             return False
 
         logger.debug(f'Checking for dead-letter messages on {self.topic_name}/{self.subscription_name}')
-        with self.client.get_subscription_receiver(
+        async with self.client.get_subscription_receiver(
             topic_name=self.topic_name,
             subscription_name=self.subscription_name,
             sub_queue=ServiceBusSubQueue.DEAD_LETTER
         ) as dlq_receiver:
-            msgs = dlq_receiver.peek_messages(max_message_count=1)
+            msgs = await dlq_receiver.peek_messages(max_message_count=1)
 
         response = len(msgs) > 0
 
@@ -139,7 +154,7 @@ class Extractor:
 
         return response
 
-    def get_messages(self) -> list[ServiceBusMessage]:
+    async def get_messages(self) -> list[ServiceBusMessage]:
         """
         Get messages from the topic/subscription.
 
@@ -148,13 +163,13 @@ class Extractor:
         list
             A list of messages.
         """
-        self.dlq_has_messages()
-        messages = self.receiver.receive_messages(
+        await self.dlq_has_messages()
+        messages = await self.receiver.receive_messages(
             max_message_count=MAX_MESSAGES_IN_BATCH,
             max_wait_time=WAIT_TIME_SECONDS
         )
 
-        # The default lock is 30 seconds.  We extend that to be auto-renewed for
+        # The default lock is 30 seconds. We extend that to be auto-renewed for
         # 2 minutes.
         for message in messages:
             self.renewer.register(self.receiver, message, max_lock_renewal_duration=120)
@@ -258,7 +273,7 @@ def is_max_runtime_exceeded(start_time: float) -> bool:
     -------
     bool
         False if MAX_RUNTIME_SECONDS is set to zero or the process is still
-        within the max allowed time.  True if the time has been exceeded.
+        within the max allowed time. True if the time has been exceeded.
     """
     if MAX_RUNTIME_SECONDS == 0:
         return False
@@ -267,7 +282,7 @@ def is_max_runtime_exceeded(start_time: float) -> bool:
     return process_time >= MAX_RUNTIME_SECONDS
 
 
-def main() -> None:
+async def _main() -> None:
     """Control the main processing."""
     global _message_count
     log_level = os.getenv('LOG_LEVEL', 'WARN')
@@ -304,9 +319,9 @@ def main() -> None:
                 break
 
             try:
-                messages = extractor.get_messages()
-                loader.load(messages)
-                extractor.accept_messages(messages)
+                messages = await extractor.get_messages()
+                await asyncio.to_thread(loader.load, messages)
+                await extractor.accept_messages(messages)
                 _message_count += len(messages)
                 consecutive_errors = 0
             except ServiceBusError as ex:
@@ -315,9 +330,14 @@ def main() -> None:
                 if consecutive_errors >= 3:
                     raise
     finally:
-        extractor.close()
+        await extractor.close()
 
     logger.info(f'A total of {_message_count:,} messages were loaded to blob storage for {topic_name}.')
+
+
+def main() -> None:
+    """Control the main processing."""
+    asyncio.run(_main())
 
 
 def main_wrapper() -> int:
