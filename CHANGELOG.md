@@ -5,6 +5,8 @@
 
 ### Fix
 
+* Exempted CVE-2026-114613 in .trivyignore with justification. [James Loughlin]
+
 * Use async Service Bus client to resolve message processing failures. [Ben Dalling]
 
 * Handle message lock errors better. [Ben Dalling]
