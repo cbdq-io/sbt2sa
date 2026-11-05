@@ -5,6 +5,31 @@
 
 ### Fix
 
+* Exempted CVE-2026-114613 in .trivyignore with justification. [James Loughlin]
+
+* Use async Service Bus client to resolve message processing failures. [Ben Dalling]
+
+* Handle message lock errors better. [Ben Dalling]
+
+### Build
+
+* Bump ghcr.io/devcontainers/features/docker-in-docker. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/docker-in-docker from 4.1.1 to 4.1.3.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/docker-in-docker
+    dependency-version: 4.1.3
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+
+## 1.0.9 (2026-10-14)
+
+### Fix
+
 * Replace BAD release 1.0.8. [Ben Dalling]
 
 * Correct exception handling. [Ben Dalling]

@@ -6,3 +6,8 @@ GHSA-6v7p-g79w-8964
 CVE-2026-97687
 CVE-2026-97689
 CVE-2026-97688
+
+# CVE-2026-114613 - msgpack 1.1.2 vendored within pip.
+# The image uses the pure-Python fallback implementation, not the
+# vulnerable C extension. Verified using Packer/Unpacker.__module__.
+CVE-2026-114613
