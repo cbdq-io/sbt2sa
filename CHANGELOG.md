@@ -1,9 +1,11 @@
 # Changelog
 
 
-## Unreleased
+## 1.0.10 (2026-11-05)
 
 ### Fix
+
+* Exempted CVE-2026-114613 in .trivyignore with justification. [James Loughlin]
 
 * Use async Service Bus client to resolve message processing failures. [Ben Dalling]
 
