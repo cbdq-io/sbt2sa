@@ -1,6 +1,23 @@
 # Changelog
 
 
+## Unreleased
+
+### Build
+
+* Bump ghcr.io/devcontainers/features/python. [dependabot[bot]]
+
+  Bumps ghcr.io/devcontainers/features/python from 1.8.0 to 1.8.1.
+
+  ---
+  updated-dependencies:
+  - dependency-name: ghcr.io/devcontainers/features/python
+    dependency-version: 1.8.1
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+
 ## 1.0.10 (2026-11-05)
 
 ### Fix
