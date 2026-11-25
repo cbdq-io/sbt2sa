@@ -1,7 +1,7 @@
 # Changelog
 
 
-## Unreleased
+## 1.0.11 (2026-11-25)
 
 ### Build
 
